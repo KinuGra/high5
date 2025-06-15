@@ -65,6 +65,7 @@ const Guess: FC = () => {
             answerUserName={answers[currentShowenAnswerIndex].userName}
             question={answers[currentShowenAnswerIndex].question}
             choices={answers[currentShowenAnswerIndex].choices}
+            showResult={showResult}
           />
         </Container>
       )}

@@ -36,7 +36,7 @@ const RoomCreateForm: FC = () => {
 
   return (
     <form onSubmit={onSubmit}>
-      <Stack gap="4" align="flex-start" maxW="sm">
+      <Stack gap="4" align="flex-start" maxW="sm" width="100%">
         <Field.Root invalid={!!errors.userName} required>
           <Field.Label>ニックネーム</Field.Label>
           <Input {...register("userName")} />
@@ -44,7 +44,13 @@ const RoomCreateForm: FC = () => {
         </Field.Root>
         <IconSelector />
 
-        <Button type="submit" loading={isSubmitting} loadingText="作成中...">
+        <Button
+          type="submit"
+          loading={isSubmitting}
+          loadingText="作成中..."
+          width="100%"
+          alignSelf="center"
+        >
           作成
         </Button>
       </Stack>
