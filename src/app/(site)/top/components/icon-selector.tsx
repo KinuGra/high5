@@ -1,12 +1,20 @@
-import { Icons } from "@/components/icons";
-import { createListCollection, HStack, IconButton, Portal, Select, useSelectContext } from "@chakra-ui/react";
-import { FC } from "react";
-import { RiAngularjsLine, RiForbidLine, RiReactjsLine, RiSvelteLine, RiVuejsLine } from "react-icons/ri";
+"use client";
 
-const IconSelector: FC=()=>{
-    const SelectTrigger = () => {
-const select = useSelectContext()
-  const items = select.selectedItems as Framework[]
+import { Icons } from "@/components/icons";
+import {
+  createListCollection,
+  HStack,
+  IconButton,
+  Portal,
+  Select,
+  useSelectContext,
+} from "@chakra-ui/react";
+import { FC } from "react";
+import { RiForbidLine } from "react-icons/ri";
+
+const SelectTrigger = () => {
+  const select = useSelectContext();
+  const items: Framework[] = select.selectedItems;
   return (
     <IconButton
       px="2"
@@ -14,11 +22,16 @@ const select = useSelectContext()
       size="sm"
       {...select.getTriggerProps()}
     >
-      {select.hasSelectedItems ? items[0].icon : <RiForbidLine />}
+      {items.length > 0 && select.hasSelectedItems ? (
+        items[0].icon
+      ) : (
+        <Icons.apple />
+      )}
     </IconButton>
-  )
-}
-    const frameworks = createListCollection({
+  );
+};
+
+const frameworks = createListCollection({
   items: [
     { label: "", value: "apple", icon: <Icons.apple /> },
     { label: "", value: "grape", icon: <Icons.grape /> },
@@ -31,22 +44,27 @@ const select = useSelectContext()
     { label: "", value: "fish", icon: <Icons.fish /> },
     { label: "", value: "kame", icon: <Icons.kame /> },
   ],
-})
+});
 
 interface Framework {
-  label: string
-  value: string
-  icon: React.ReactNode
+  label: string;
+  value: string;
+  icon: React.ReactNode;
 }
 
-    
-return(
+type IconSelectorProps = {
+  onChange: (value: string[]) => void;
+};
+
+const IconSelector: FC<IconSelectorProps> = ({ onChange }) => {
+  return (
     <Select.Root
       positioning={{ sameWidth: false }}
       collection={frameworks}
       size="sm"
       width="320px"
-      defaultValue={["react"]}
+      defaultValue={["apple"]}
+      onValueChange={(details) => onChange(details.value)}
     >
       <Select.HiddenSelect />
       <Select.Control>
@@ -68,8 +86,7 @@ return(
         </Select.Positioner>
       </Portal>
     </Select.Root>
-);
-}
-
+  );
+};
 
 export default IconSelector;

@@ -4,12 +4,13 @@ import { useAppDispatch } from "@/stores";
 import { Button, Field, Input, Stack } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { FC } from "react";
-import { useForm } from "react-hook-form";
-import { createUniqueRoomId } from "src/features/createRoomId"
+import { Controller, useForm } from "react-hook-form";
+import { createUniqueRoomId } from "src/features/createRoomId";
 import IconSelector from "./icon-selector";
 
 interface FormValues {
   userName: string;
+  userIcon: string;
 }
 
 const RoomCreateForm: FC = () => {
@@ -18,6 +19,7 @@ const RoomCreateForm: FC = () => {
   const userNameCookie = useCookieStore("userName");
 
   const {
+    control,
     register,
     handleSubmit,
     formState: { isSubmitting, isSubmitSuccessful, errors },
@@ -42,7 +44,20 @@ const RoomCreateForm: FC = () => {
           <Input {...register("userName")} />
           <Field.ErrorText>{errors.userName?.message}</Field.ErrorText>
         </Field.Root>
-        <IconSelector />
+
+        <Field.Root invalid={!!errors.userIcon} required>
+          <Field.Label>アイコン</Field.Label>
+          <Controller
+            name="userIcon"
+            control={control}
+            defaultValue="apple"
+            render={({ field }) => (
+              <IconSelector
+                onChange={(value) => field.onChange(value[0] || "")}
+              />
+            )}
+          />
+        </Field.Root>
 
         <Button
           type="submit"

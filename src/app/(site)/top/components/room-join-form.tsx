@@ -4,10 +4,12 @@ import { useAppDispatch } from "@/stores";
 import { Button, Field, Input, Stack } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { FC } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
+import IconSelector from "./icon-selector";
 
 interface FormValues {
   userName: string;
+  userIcon: string;
   roomName: string;
 }
 
@@ -17,6 +19,7 @@ const RoomJoinForm: FC = () => {
   const userNameCookie = useCookieStore("userName");
 
   const {
+    control,
     register,
     handleSubmit,
     formState: { isSubmitting, isSubmitSuccessful, errors },
@@ -27,6 +30,7 @@ const RoomJoinForm: FC = () => {
   });
 
   const onSubmit = handleSubmit(async (data) => {
+    console.log(data);
     const body = { roomName: data.roomName };
     const res = await fetch("/api/room/exists", {
       method: "POST",
@@ -54,6 +58,20 @@ const RoomJoinForm: FC = () => {
           <Field.Label>ニックネーム</Field.Label>
           <Input {...register("userName")} />
           <Field.ErrorText>{errors.userName?.message}</Field.ErrorText>
+        </Field.Root>
+
+        <Field.Root invalid={!!errors.userIcon} required>
+          <Field.Label>アイコン</Field.Label>
+          <Controller
+            name="userIcon"
+            control={control}
+            defaultValue="apple"
+            render={({ field }) => (
+              <IconSelector
+                onChange={(value) => field.onChange(value[0] || "")}
+              />
+            )}
+          />
         </Field.Root>
 
         <Field.Root invalid={!!errors.roomName} required>
