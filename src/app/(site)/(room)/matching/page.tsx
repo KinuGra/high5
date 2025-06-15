@@ -1,8 +1,8 @@
-"use client"
-import { type FC, useEffect } from "react"
-import { useRouter } from "next/navigation"
-import { RoomCondition } from "@/types/room-condition"
-import { useAppSelector } from "@/stores"
+"use client";
+import { type FC, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { RoomCondition } from "@/types/room-condition";
+import { useAppSelector } from "@/stores";
 
 const Matching: FC = () => {
   const { roomName, roomCondition, members } = useAppSelector(
@@ -12,36 +12,42 @@ const Matching: FC = () => {
 
   useEffect(() => {
     if (roomCondition === RoomCondition.Progressing) {
-      router.push("/question")
+      router.push("/question");
     }
-  }, [roomCondition, router])
+  }, [roomCondition, router]);
 
   const onClick = async () => {
     try {
-      const body = { roomName: roomName }
+      const body = { roomName: roomName };
       const res = await fetch("/api/room/start", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(body),
-      })
+      });
 
       if (res.ok) {
-        console.log("Room started successfully")
+        console.log("Room started successfully");
       }
     } catch (error) {
-      console.error("Failed to start room:", error)
+      console.error("Failed to start room:", error);
     }
-  }
+  };
 
   return (
     <div className="matching-container">
       <style jsx>{`
         .matching-container {
-          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif;
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+            sans-serif;
           min-height: 100vh;
-          background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 50%, #f3e8ff 100%);
+          background: linear-gradient(
+            135deg,
+            #fdf2f8 0%,
+            #fce7f3 50%,
+            #f3e8ff 100%
+          );
           position: relative;
           overflow: hidden;
           width: 100vw;
@@ -117,30 +123,59 @@ const Matching: FC = () => {
 
         /* 歩行アニメーション */
         @keyframes headBob {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-2px); }
+          0%,
+          100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-2px);
+          }
         }
 
         @keyframes leftLeg {
-          0% { transform: rotate(0deg); }
-          25% { transform: rotate(20deg); }
-          50% { transform: rotate(0deg); }
-          75% { transform: rotate(-20deg); }
-          100% { transform: rotate(0deg); }
+          0% {
+            transform: rotate(0deg);
+          }
+          25% {
+            transform: rotate(20deg);
+          }
+          50% {
+            transform: rotate(0deg);
+          }
+          75% {
+            transform: rotate(-20deg);
+          }
+          100% {
+            transform: rotate(0deg);
+          }
         }
 
         @keyframes rightLeg {
-          0% { transform: rotate(0deg); }
-          25% { transform: rotate(-20deg); }
-          50% { transform: rotate(0deg); }
-          75% { transform: rotate(20deg); }
-          100% { transform: rotate(0deg); }
+          0% {
+            transform: rotate(0deg);
+          }
+          25% {
+            transform: rotate(-20deg);
+          }
+          50% {
+            transform: rotate(0deg);
+          }
+          75% {
+            transform: rotate(20deg);
+          }
+          100% {
+            transform: rotate(0deg);
+          }
         }
 
         /* 移動アニメーション */
         @keyframes walkAcross {
-          0% { transform: translateX(-100px); }
-          100% { transform: translateX(calc(100vw + 100px)); }
+          0% {
+            transform: translateX(-100px);
+          }
+          100% {
+            transform: translateX(calc(100vw + 100px));
+          }
         }
 
         /* 赤色の人 */
@@ -416,7 +451,12 @@ const Matching: FC = () => {
           left: -100%;
           width: 100%;
           height: 100%;
-          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+          background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.3),
+            transparent
+          );
           transition: left 0.5s ease;
         }
 
@@ -460,7 +500,12 @@ const Matching: FC = () => {
           left: -100%;
           width: 100%;
           height: 100%;
-          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+          background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.2),
+            transparent
+          );
           transition: left 0.5s ease;
         }
 
@@ -578,7 +623,9 @@ const Matching: FC = () => {
             <div className="logo-icon">👥</div>
             <h1 className="logo-text">High5</h1>
           </div>
-          <p className="subtitle">みんなで回答を推測しあって、アイスブレイクを楽しみましょう</p>
+          <p className="subtitle">
+            みんなで回答を推測しあって、アイスブレイクを楽しみましょう
+          </p>
         </div>
 
         {/* カードコンテナ */}
@@ -610,8 +657,7 @@ const Matching: FC = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Matching
-
+export default Matching;
