@@ -2,11 +2,11 @@ import { GuessIncrementData } from "@/app/api/guess/increment/route";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 export interface IGuessIncrementState {
-  currentShowenAnswerIndex: number;
+  currentGuessTurn: number;
 }
 
 const initialState: IGuessIncrementState = {
-  currentShowenAnswerIndex: 0,
+  currentGuessTurn: 0,
 };
 
 const guessIncrementSlice = createSlice({
@@ -14,7 +14,7 @@ const guessIncrementSlice = createSlice({
   initialState,
   reducers: {
     incrementGuess: (state, action: PayloadAction<GuessIncrementData>) => {
-      state.currentShowenAnswerIndex = action.payload.prevIndex + 1;
+      state.currentGuessTurn = action.payload.prevTurn + 1;
     },
   },
 });

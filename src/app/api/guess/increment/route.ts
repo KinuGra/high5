@@ -2,15 +2,15 @@ import { getPusherInstance } from "@/libs/pusher/server";
 const pusherServer = getPusherInstance();
 
 export type GuessIncrementData = {
-  prevIndex: number;
+  prevTurn: number;
 };
 
 export async function POST(req: Request) {
-  const { roomName, prevIndex } = await req.json();
+  const { roomName, prevTurn } = await req.json();
 
   try {
     await pusherServer.trigger(`private-${roomName}`, "evt::guessIncrement", {
-      prevIndex,
+      prevTurn: prevTurn,
     } as GuessIncrementData);
 
     return Response.json({ message: "ok" }, { status: 200 });

@@ -3,6 +3,7 @@ import { type FC, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { RoomCondition } from "@/types/room-condition";
 import { useAppSelector } from "@/stores";
+import { GetIcon } from "@/components/icons";
 
 const Matching: FC = () => {
   const { roomName, roomCondition, members } = useAppSelector(
@@ -431,6 +432,14 @@ const Matching: FC = () => {
           overflow-y: auto;
         }
 
+        .member-slot {
+          display: flex;
+        }
+
+        .member-icon {
+          align-content: center;
+        }
+
         .member-item {
           background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
           color: #1f2937;
@@ -442,6 +451,7 @@ const Matching: FC = () => {
           transition: all 0.3s ease;
           position: relative;
           overflow: hidden;
+          width: 80%;
         }
 
         .member-item::before {
@@ -641,8 +651,11 @@ const Matching: FC = () => {
             <h2 className="members-title">参加メンバー</h2>
             <div className="members-grid">
               {members.map((member, index) => (
-                <div key={index} className="member-item">
-                  {member}
+                <div key={index} className="member-slot">
+                  <div className="member-icon">
+                    {GetIcon(member.userIcon, {})}
+                  </div>
+                  <div className="member-item">{member.userName}</div>
                 </div>
               ))}
             </div>

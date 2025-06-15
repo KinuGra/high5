@@ -9,7 +9,6 @@ import {
   Suspense,
 } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { useCookieStore } from "@/components/cookie/useCookieValue";
 import { useAppSelector } from "@/stores";
 import "./question-answer-form.css";
 
@@ -34,8 +33,7 @@ const QuestionAnswerFormContent: FC<QuestionAnswerFormProps> = ({
   setIsWaiting,
 }) => {
   const [questionData, setQuestionData] = useState<QuestionData | null>(null);
-  const { roomName } = useAppSelector((state) => state.roomInfo);
-  const userName = useCookieStore("userName").getValue();
+  const { userName, roomName } = useAppSelector((state) => state.roomInfo);
   const answerRate = Math.round((answersCount / membersCount) * 100) || 0;
 
   useEffect(() => {

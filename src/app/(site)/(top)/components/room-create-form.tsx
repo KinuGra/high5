@@ -1,12 +1,12 @@
-import { useCookieStore } from "@/components/cookie/useCookieValue";
-import { setRoomName } from "@/reducers/room-reducer";
-import { useAppDispatch } from "@/stores";
+import { setRoomInfo } from "@/reducers/room-reducer";
+import { useAppDispatch, useAppSelector } from "@/stores";
 import { Button, Field, Input, Stack } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { FC } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { createUniqueRoomId } from "src/features/createRoomId";
 import IconSelector from "./icon-selector";
+import { RoomCondition } from "@/types/room-condition";
 
 interface FormValues {
   userName: string;
@@ -16,22 +16,31 @@ interface FormValues {
 const RoomCreateForm: FC = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const userNameCookie = useCookieStore("userName");
+  const { userName } = useAppSelector((state) => state.roomInfo);
 
   const {
     control,
     register,
     handleSubmit,
     formState: { isSubmitting, isSubmitSuccessful, errors },
-  } = useForm<FormValues>();
+  } = useForm<FormValues>({
+    defaultValues: {
+      userName: userName,
+    },
+  });
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log(data);
-
-    userNameCookie.setValue(data.userName);
     // ルーム名を重複しないように自動生成
     const roomId = await createUniqueRoomId();
-    dispatch(setRoomName(roomId));
+    const roomInfo = {
+      userName: data.userName,
+      userIcon: data.userIcon,
+      roomName: roomId,
+      roomCondition: RoomCondition.Matching,
+      members: [],
+    };
+
+    dispatch(setRoomInfo(roomInfo));
 
     router.push("/matching");
   });

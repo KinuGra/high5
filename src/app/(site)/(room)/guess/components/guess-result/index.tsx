@@ -3,9 +3,11 @@
 import { MouseEventHandler, useEffect, useRef } from "react";
 import "./styles.css";
 import { GuessData } from "@/app/api/guess/route";
+import { GetIcon } from "@/components/icons";
 
 interface GuessResultProps {
   answerUserName: string;
+  question: string;
   guesses: GuessData[];
   userAnswer: string;
   enableNextButton: boolean;
@@ -15,6 +17,7 @@ interface GuessResultProps {
 
 export default function GuessResult({
   answerUserName,
+  question,
   guesses,
   userAnswer,
   enableNextButton,
@@ -114,6 +117,10 @@ export default function GuessResult({
           <h2 className="username-label">{answerUserName}さんの結果</h2>
         </div>
 
+        <div className="question-header">
+          <div className="question-icon">Q</div>
+          <h2 className="question-title">{question}</h2>
+        </div>
         <div className="guesses-section">
           <h3 className="section-title">みんなの推測</h3>
           <div className="guesses-list" key={animationKey}>
@@ -125,7 +132,16 @@ export default function GuessResult({
                   animationDelay: `${index * 0.15}s`, // 各アイテムに遅延を追加
                 }}
               >
-                {guess.guess}
+                <div className="guess-content">
+                  <div className="guess-text">{guess.guess}</div>
+                  <div className="guess-author">
+                    <div className="guess-author-by">by</div>
+                    <div className="guess-author-icon">
+                      {GetIcon(guess?.userIcon, { width: 24 })}
+                    </div>
+                    <div>{guess.userName}さん</div>
+                  </div>
+                </div>
               </div>
             ))}
           </div>

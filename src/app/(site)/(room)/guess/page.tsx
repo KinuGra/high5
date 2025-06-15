@@ -6,23 +6,24 @@ import GuessForm from "./components/guess-form";
 import { Container } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import GuessResult from "./components/guess-result";
-import { useCookieStore } from "@/components/cookie/useCookieValue";
 
 const Guess: FC = () => {
-  const { roomName, members } = useAppSelector((state) => state.roomInfo);
+  const { userName, roomName, members } = useAppSelector(
+    (state) => state.roomInfo
+  );
   const { answers } = useAppSelector((state) => state.answers);
   const { guesses } = useAppSelector((state) => state.guesses);
-  const { currentShowenAnswerIndex } = useAppSelector(
-    (state) => state.guessIncrement
-  );
+  const { currentGuessTurn } = useAppSelector((state) => state.guessIncrement);
   const [showResult, setShowResult] = useState<boolean>(false);
   const [enableNextButton, setEnableNextButton] = useState<boolean>(false);
-  const userName = useCookieStore("userName").getValue();
   const router = useRouter();
   const [animationKey, setAnimationKey] = useState<number>(0); // アニメーションをリセットするためのキー
 
   useEffect(() => {
-    if (guesses[currentShowenAnswerIndex].length >= members.length - 1) {
+    if (
+      Object.keys(guesses).length > 0 &&
+      guesses[currentGuessTurn].length >= members.length - 1
+    ) {
       setEnableNextButton(true);
       setShowResult(true);
     }
@@ -30,20 +31,20 @@ const Guess: FC = () => {
 
   useEffect(() => {
     setEnableNextButton(false);
-    if (answers[currentShowenAnswerIndex].userName === userName) {
+    if (answers[currentGuessTurn].userName === userName) {
       setShowResult(true);
     } else {
       setShowResult(false);
     }
-  }, [currentShowenAnswerIndex]);
+  }, [currentGuessTurn]);
 
   const handleClick = async () => {
-    if (currentShowenAnswerIndex >= members.length - 1) {
+    if (currentGuessTurn >= members.length - 1) {
       router.push("/result");
       return;
     }
 
-    const body = { roomName: roomName, prevIndex: currentShowenAnswerIndex };
+    const body = { roomName: roomName, prevTurn: currentGuessTurn };
     await fetch("/api/guess/increment", {
       method: "POST",
       headers: {
@@ -62,19 +63,21 @@ const Guess: FC = () => {
       {!showResult && (
         <Container>
           <GuessForm
-            answerUserName={answers[currentShowenAnswerIndex].userName}
-            question={answers[currentShowenAnswerIndex].question}
-            choices={answers[currentShowenAnswerIndex].choices}
+            answerUserName={answers[currentGuessTurn].userName}
+            question={answers[currentGuessTurn].question}
+            choices={answers[currentGuessTurn].choices}
+            answer={answers[currentGuessTurn].answer}
             showResult={showResult}
-            guessTurnId={currentShowenAnswerIndex}
+            currentGuessTurn={currentGuessTurn}
           />
         </Container>
       )}
       {showResult && (
         <GuessResult
-          answerUserName={answers[currentShowenAnswerIndex].userName}
-          guesses={guesses[currentShowenAnswerIndex]}
-          userAnswer={answers[currentShowenAnswerIndex].answer}
+          answerUserName={answers[currentGuessTurn].userName}
+          question={answers[currentGuessTurn].question}
+          guesses={guesses[currentGuessTurn] ?? []}
+          userAnswer={answers[currentGuessTurn].answer}
           enableNextButton={enableNextButton}
           animationKey={animationKey}
           handleClick={handleClick}

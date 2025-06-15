@@ -1,4 +1,5 @@
 import { LucideProps } from "lucide-react";
+import React from "react";
 
 export const Icons = {
   gitHub: (props: LucideProps) => (
@@ -219,4 +220,31 @@ export const Icons = {
       <path d="M16.93 10H20a2 2 0 0 1 0 4H2" />
     </svg>
   ),
+};
+
+export const GetIcon = (id: string, { ...props }) => {
+  switch (id) {
+    case "apple":
+      return <Icons.apple {...props} />;
+    case "hart":
+      return <Icons.hart {...props} />;
+    case "star":
+      return <Icons.star {...props} />;
+    case "snow":
+      return <Icons.snow {...props} />;
+    case "flower":
+      return <Icons.flower {...props} />;
+    case "tree":
+      return <Icons.tree {...props} />;
+    case "hamburger":
+      return <Icons.hamburger {...props} />;
+    case "grape":
+      return <Icons.grape {...props} />;
+    case "fish":
+      return <Icons.fish {...props} />;
+    case "kame":
+      return <Icons.kame {...props} />;
+    default:
+      return <Icons.apple {...props} />;
+  }
 };
