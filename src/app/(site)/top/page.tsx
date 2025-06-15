@@ -112,7 +112,7 @@ const Top: FC = () => {
             </div>
             <h4 className="feature-title">楽しいゲーム</h4>
             <p className="feature-description">
-              みんなで楽しめる楽しいゲームがいっぱい
+              「ドラえもんのひみつ道具で一番欲しいのは？」みたいな問題にあの人が何て答えたか当ててみよう！
             </p>
           </div>
 

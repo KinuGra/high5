@@ -49,7 +49,7 @@ const RoomJoinForm: FC = () => {
 
   return (
     <form onSubmit={onSubmit}>
-      <Stack gap="4" align="flex-start" maxW="sm">
+      <Stack gap="4" align="flex-start" maxW="sm" width="100%">
         <Field.Root invalid={!!errors.userName} required>
           <Field.Label>ニックネーム</Field.Label>
           <Input {...register("userName")} />
@@ -62,7 +62,13 @@ const RoomJoinForm: FC = () => {
           <Field.ErrorText>{errors.roomName?.message}</Field.ErrorText>
         </Field.Root>
 
-        <Button type="submit" loading={isSubmitting} loadingText="参加中...">
+        <Button
+          type="submit"
+          loading={isSubmitting}
+          loadingText="参加中..."
+          width="100%"
+          alignSelf="center"
+        >
           参加
         </Button>
       </Stack>
