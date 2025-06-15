@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { FC } from "react";
 import { useForm } from "react-hook-form";
 import { createUniqueRoomId } from "src/features/createRoomId"
+import IconSelector from "./icon-selector";
 
 interface FormValues {
   userName: string;
@@ -41,6 +42,7 @@ const RoomCreateForm: FC = () => {
           <Input {...register("userName")} />
           <Field.ErrorText>{errors.userName?.message}</Field.ErrorText>
         </Field.Root>
+        <IconSelector />
 
         <Button type="submit" loading={isSubmitting} loadingText="作成中...">
           作成
