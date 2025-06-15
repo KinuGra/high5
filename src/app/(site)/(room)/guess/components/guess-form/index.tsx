@@ -9,6 +9,7 @@ export interface GuessFormProps {
   question: string;
   choices: string[];
   showResult: boolean;
+  guessTurnId: number;
 }
 
 interface FormValues {
@@ -19,7 +20,8 @@ const GuessForm: FC<GuessFormProps> = ({
   answerUserName,
   question,
   choices,
-  showResult
+  showResult,
+  guessTurnId
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { roomName } = useAppSelector((state) => state.roomInfo);
@@ -40,6 +42,7 @@ const GuessForm: FC<GuessFormProps> = ({
     const userName = userNameCookie.getValue();
 
     const otherInfo = {
+      guessTurnId: guessTurnId,
       roomName: roomName,
       userName: userName,
     };

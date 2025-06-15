@@ -6,11 +6,17 @@ export type GuessData = {
   guess: string;
 };
 
+export type GuessPostData = {
+  guessTurnId: number;
+  guessData: GuessData;
+};
+
 export async function POST(req: Request) {
-  const { roomName, userName, guess } = await req.json();
+  const { roomName, guessTurnId, userName, guess } = await req.json();
 
   try {
     await pusherServer.trigger(`private-${roomName}`, "evt::guessed", {
+      guessTurnId,
       userName,
       guess,
     } as GuessData);

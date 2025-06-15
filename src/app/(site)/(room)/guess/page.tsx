@@ -22,7 +22,7 @@ const Guess: FC = () => {
   const [animationKey, setAnimationKey] = useState<number>(0); // アニメーションをリセットするためのキー
 
   useEffect(() => {
-    if (guesses.length >= members.length - 1) {
+    if (guesses[currentShowenAnswerIndex].length >= members.length - 1) {
       setEnableNextButton(true);
       setShowResult(true);
     }
@@ -66,13 +66,14 @@ const Guess: FC = () => {
             question={answers[currentShowenAnswerIndex].question}
             choices={answers[currentShowenAnswerIndex].choices}
             showResult={showResult}
+            guessTurnId={currentShowenAnswerIndex}
           />
         </Container>
       )}
       {showResult && (
         <GuessResult
           answerUserName={answers[currentShowenAnswerIndex].userName}
-          guesses={guesses}
+          guesses={guesses[currentShowenAnswerIndex]}
           userAnswer={answers[currentShowenAnswerIndex].answer}
           enableNextButton={enableNextButton}
           animationKey={animationKey}

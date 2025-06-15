@@ -13,7 +13,7 @@ import { Members } from "pusher-js";
 import { AnswerData } from "@/app/api/answer/route";
 import { addAnswer } from "@/reducers/answer-reducer";
 import { addGuess, resetGuesses } from "@/reducers/guess-reducer";
-import { GuessData } from "@/app/api/guess/route";
+import { GuessData, GuessPostData } from "@/app/api/guess/route";
 import { RoomCondition } from "@/types/room-condition";
 import { GuessIncrementData } from "@/app/api/guess/increment/route";
 import { incrementGuess } from "@/reducers/guess-increment-reducer";
@@ -42,6 +42,7 @@ export function PusherConnector() {
     );
 
     privateChannel.bind("evt::start", () => {
+      resetGuesses();
       dispatch(setRoomCondition(RoomCondition.Progressing));
     });
 
@@ -49,7 +50,7 @@ export function PusherConnector() {
       dispatch(addAnswer(answer));
     });
 
-    privateChannel.bind("evt::guessed", (guess: GuessData) => {
+    privateChannel.bind("evt::guessed", (guess: GuessPostData) => {
       dispatch(addGuess(guess));
     });
 
@@ -57,7 +58,6 @@ export function PusherConnector() {
       "evt::guessIncrement",
       (guessIncrement: GuessIncrementData) => {
         dispatch(incrementGuess(guessIncrement));
-        dispatch(resetGuesses());
       }
     );
 
