@@ -1,16 +1,17 @@
 "use client";
 
-import { useAppSelector } from "@/stores";
+import { useAppDispatch, useAppSelector } from "@/stores";
 import { FC, useEffect, useState } from "react";
 import GuessForm from "./components/guess-form";
 import { Container } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import GuessResult from "./components/guess-result";
+import { resetAnswers } from "@/reducers/answer-reducer";
+import { resetGuessTurn } from "@/reducers/guess-increment-reducer";
 
 const Guess: FC = () => {
-  const { userName, roomName, members } = useAppSelector(
-    (state) => state.roomInfo
-  );
+  const { userName, roomName, members, currentRound, maxRound } =
+    useAppSelector((state) => state.roomInfo);
   const { answers } = useAppSelector((state) => state.answers);
   const { guesses } = useAppSelector((state) => state.guesses);
   const { currentGuessTurn } = useAppSelector((state) => state.guessIncrement);
@@ -18,6 +19,21 @@ const Guess: FC = () => {
   const [enableNextButton, setEnableNextButton] = useState<boolean>(false);
   const router = useRouter();
   const [animationKey, setAnimationKey] = useState<number>(0); // アニメーションをリセットするためのキー
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (currentGuessTurn < members.length - 1) return;
+    if (currentRound > maxRound) {
+      router.push("/result");
+    } else {
+      console.log("to question");
+
+      dispatch(resetAnswers());
+      dispatch(resetGuessTurn());
+      router.push("/question");
+    }
+  }, [currentRound]);
 
   useEffect(() => {
     if (
@@ -30,8 +46,9 @@ const Guess: FC = () => {
   }, [guesses]);
 
   useEffect(() => {
+    setIsLoading(false);
     setEnableNextButton(false);
-    if (answers[currentGuessTurn].userName === userName) {
+    if (answers.length > 0 && answers[currentGuessTurn].userName === userName) {
       setShowResult(true);
     } else {
       setShowResult(false);
@@ -39,8 +56,16 @@ const Guess: FC = () => {
   }, [currentGuessTurn]);
 
   const handleClick = async () => {
+    setIsLoading(true);
     if (currentGuessTurn >= members.length - 1) {
-      router.push("/result");
+      const body = { roomName: roomName, guesses: guesses };
+      await fetch("/api/room/round-end", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
       return;
     }
 
@@ -54,13 +79,11 @@ const Guess: FC = () => {
     });
 
     setAnimationKey((prev) => prev + 1); // アニメーションをリセット
-    setEnableNextButton(false);
-    setShowResult(false);
   };
 
   return (
     <>
-      {!showResult && (
+      {!showResult && answers.length > 0 && (
         <Container>
           <GuessForm
             answerUserName={answers[currentGuessTurn].userName}
@@ -72,7 +95,7 @@ const Guess: FC = () => {
           />
         </Container>
       )}
-      {showResult && (
+      {showResult && answers.length > 0 && (
         <GuessResult
           answerUserName={answers[currentGuessTurn].userName}
           question={answers[currentGuessTurn].question}
@@ -81,6 +104,7 @@ const Guess: FC = () => {
           enableNextButton={enableNextButton}
           animationKey={animationKey}
           handleClick={handleClick}
+          isLoading={isLoading}
         />
       )}
     </>

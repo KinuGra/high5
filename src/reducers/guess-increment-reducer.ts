@@ -13,11 +13,15 @@ const guessIncrementSlice = createSlice({
   name: "guesses",
   initialState,
   reducers: {
-    incrementGuess: (state, action: PayloadAction<GuessIncrementData>) => {
+    incrementGuessTurn: (state, action: PayloadAction<GuessIncrementData>) => {
       state.currentGuessTurn = action.payload.prevTurn + 1;
+    },
+    resetGuessTurn: (state) => {
+      state.currentGuessTurn = 0;
     },
   },
 });
 
-export const { incrementGuess } = guessIncrementSlice.actions;
+export const { incrementGuessTurn, resetGuessTurn } =
+  guessIncrementSlice.actions;
 export const guessIncrementReducer = guessIncrementSlice.reducer;

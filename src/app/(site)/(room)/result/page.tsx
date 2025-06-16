@@ -257,29 +257,9 @@ const styles: { [key: string]: React.CSSProperties } = {
   },
 };
 
-function calcScore(guesses: { [key: number]: GuessData[] }) {
-  const correctCounts: { [userName: string]: number } = {};
-  for (let [_, value] of Object.entries(guesses)) {
-    for (const v of value) {
-      if (!correctCounts[v.userName]) {
-        correctCounts[v.userName] = 0;
-      }
-      if (v.isCorrect) {
-        correctCounts[v.userName]++;
-      }
-    }
-  }
-
-  const players = [];
-  for (let [key, value] of Object.entries(correctCounts)) {
-    players.push({ name: key, score: value });
-  }
-  return players;
-}
-
 const Result: FC = () => {
-  const { guesses } = useAppSelector((state) => state.guesses);
-  const players = calcScore(guesses);
+  const { scores } = useAppSelector((state) => state.score);
+  const players = scores;
   const maxScore = Math.max(...players.map((p) => p.score));
   const sortedPlayers = [...players].sort((a, b) => b.score - a.score);
   const [showList, setShowList] = useState(false);

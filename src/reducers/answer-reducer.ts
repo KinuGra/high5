@@ -17,7 +17,7 @@ const answerSlice = createSlice({
       state.answers = [...state.answers, action.payload];
       state.answers.sort();
     },
-    resetAnswers: (state, action) => {
+    resetAnswers: (state) => {
       state.answers = [];
     },
   },

@@ -6,11 +6,7 @@ export type QuestionData = {
 export async function GET(req: Request, res: Response) {
   // 抽選処理
   const questionIndex = Math.floor(Math.random() * questions.length);
-  console.log(questionIndex)
-  return Response.json(
-    questions[questionIndex],
-    { status: 200 }
-  );
+  return Response.json(questions[questionIndex], { status: 200 });
 }
 
 const questions = [
@@ -26,4 +22,4 @@ const questions = [
     question: "ドラえもんのひみつ道具で一番欲しいのは？",
     choices: ["どこでもドア", "もしもボックス", "タケコプター", "空気砲"],
   },
-]
+];

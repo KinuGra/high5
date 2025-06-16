@@ -13,6 +13,7 @@ interface GuessResultProps {
   enableNextButton: boolean;
   animationKey: number;
   handleClick: MouseEventHandler<HTMLButtonElement>;
+  isLoading: boolean;
 }
 
 export default function GuessResult({
@@ -23,6 +24,7 @@ export default function GuessResult({
   enableNextButton,
   animationKey,
   handleClick,
+  isLoading,
 }: GuessResultProps) {
   const answerRef = useRef<HTMLDivElement>(null);
   const sparkleIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -155,7 +157,11 @@ export default function GuessResult({
         </div>
 
         {enableNextButton && (
-          <button className="next-button" onClick={handleClick}>
+          <button
+            className="next-button"
+            disabled={isLoading}
+            onClick={handleClick}
+          >
             次へ
           </button>
         )}

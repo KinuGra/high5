@@ -12,6 +12,8 @@ export interface IRoomState {
   roomName: string;
   roomCondition: RoomCondition;
   members: MemberInfo[];
+  currentRound: number;
+  maxRound: number;
 }
 
 const initialState: IRoomState = {
@@ -20,6 +22,8 @@ const initialState: IRoomState = {
   roomName: "",
   roomCondition: RoomCondition.Matching,
   members: [],
+  currentRound: 0,
+  maxRound: 3,
 };
 
 const roomSlice = createSlice({
@@ -30,6 +34,7 @@ const roomSlice = createSlice({
       state.userName = action.payload.userName;
       state.userIcon = action.payload.userIcon;
       state.roomName = action.payload.roomName;
+      state.maxRound = action.payload.maxRound;
     },
     setRoomCondition: (state, action: PayloadAction<RoomCondition>) => {
       state.roomCondition = action.payload;
@@ -43,9 +48,17 @@ const roomSlice = createSlice({
         (_, i) => i !== state.members.indexOf(action.payload)
       );
     },
+    incrementRound: (state) => {
+      state.currentRound++;
+    },
   },
 });
 
-export const { setRoomInfo, setRoomCondition, addMembers, removeMembers } =
-  roomSlice.actions;
+export const {
+  setRoomInfo,
+  setRoomCondition,
+  addMembers,
+  removeMembers,
+  incrementRound,
+} = roomSlice.actions;
 export const roomReducer = roomSlice.reducer;

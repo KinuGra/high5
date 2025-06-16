@@ -4,18 +4,23 @@ import { useAppDispatch, useAppSelector } from "@/stores";
 import { useEffect } from "react";
 import {
   addMembers,
+  incrementRound,
   removeMembers,
   setRoomCondition,
 } from "@/reducers/room-reducer";
 import { pusherClient } from "@/libs/pusher/client";
 import { Members } from "pusher-js";
 import { AnswerData } from "@/app/api/answer/route";
-import { addAnswer } from "@/reducers/answer-reducer";
-import { addGuess, resetGuesses } from "@/reducers/guess-reducer";
-import { GuessPostData } from "@/app/api/guess/route";
+import { addAnswer, resetAnswers } from "@/reducers/answer-reducer";
+import { addGuess, IGuessState, resetGuesses } from "@/reducers/guess-reducer";
+import { GuessData, GuessPostData } from "@/app/api/guess/route";
 import { RoomCondition } from "@/types/room-condition";
 import { GuessIncrementData } from "@/app/api/guess/increment/route";
-import { incrementGuess } from "@/reducers/guess-increment-reducer";
+import {
+  incrementGuessTurn,
+  resetGuessTurn,
+} from "@/reducers/guess-increment-reducer";
+import { calcScore } from "@/reducers/score-reducer";
 
 export function PusherConnector() {
   const dispatch = useAppDispatch();
@@ -41,6 +46,7 @@ export function PusherConnector() {
 
     privateChannel.bind("evt::start", () => {
       resetGuesses();
+      dispatch(incrementRound());
       dispatch(setRoomCondition(RoomCondition.Progressing));
     });
 
@@ -55,9 +61,15 @@ export function PusherConnector() {
     privateChannel.bind(
       "evt::guessIncrement",
       (guessIncrement: GuessIncrementData) => {
-        dispatch(incrementGuess(guessIncrement));
+        dispatch(incrementGuessTurn(guessIncrement));
       }
     );
+
+    privateChannel.bind("evt::roundEnd", (guesses: IGuessState) => {
+      dispatch(incrementRound());
+      dispatch(calcScore(guesses));
+      dispatch(resetGuesses());
+    });
 
     const presenceChannel = pusherClient(userName, userIcon).subscribe(
       `presence-${roomName}`

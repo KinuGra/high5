@@ -4,6 +4,7 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { answerReducer } from "@/reducers/answer-reducer";
 import { guessReducer } from "@/reducers/guess-reducer";
 import { guessIncrementReducer } from "@/reducers/guess-increment-reducer";
+import { scoreReducer } from "@/reducers/score-reducer";
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ export const store = configureStore({
     answers: answerReducer,
     guesses: guessReducer,
     guessIncrement: guessIncrementReducer,
+    score: scoreReducer,
   },
 });
 
