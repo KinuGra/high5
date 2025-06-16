@@ -5,6 +5,7 @@ export type GuessData = {
   userName: string;
   userIcon: string;
   guess: string;
+  isCorrect: boolean;
 };
 
 export type GuessPostData = {
@@ -13,12 +14,13 @@ export type GuessPostData = {
 };
 
 export async function POST(req: Request) {
-  const { roomName, currentGuessTurn, userName, userIcon, guess } =
+  const { roomName, currentGuessTurn, userName, userIcon, guess, isCorrect } =
     await req.json();
   const guessData: GuessData = {
     userName: userName,
     userIcon: userIcon,
     guess: guess,
+    isCorrect: isCorrect,
   };
 
   try {
