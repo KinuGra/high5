@@ -36,6 +36,9 @@ const roomSlice = createSlice({
       state.roomName = action.payload.roomName;
       state.maxRound = action.payload.maxRound;
     },
+    setMaxRound: (state, action: PayloadAction<number>) => {
+      state.maxRound = action.payload;
+    },
     setRoomCondition: (state, action: PayloadAction<RoomCondition>) => {
       state.roomCondition = action.payload;
     },
@@ -56,6 +59,7 @@ const roomSlice = createSlice({
 
 export const {
   setRoomInfo,
+  setMaxRound,
   setRoomCondition,
   addMembers,
   removeMembers,

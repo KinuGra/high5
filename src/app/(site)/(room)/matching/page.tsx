@@ -6,7 +6,7 @@ import { useAppSelector } from "@/stores";
 import { GetIcon } from "@/components/icons";
 
 const Matching: FC = () => {
-  const { roomName, roomCondition, members } = useAppSelector(
+  const { roomName, roomCondition, members, maxRound } = useAppSelector(
     (state) => state.roomInfo
   );
   const router = useRouter();
@@ -19,7 +19,7 @@ const Matching: FC = () => {
 
   const onClick = async () => {
     try {
-      const body = { roomName: roomName };
+      const body = { roomName: roomName, maxRound: maxRound };
       const res = await fetch("/api/room/start", {
         method: "POST",
         headers: {
@@ -662,11 +662,13 @@ const Matching: FC = () => {
           </div>
 
           {/* スタートボタン */}
-          <div className="start-button-container">
-            <button className="start-button" onClick={onClick}>
-              ゲームを開始する
-            </button>
-          </div>
+          {maxRound && (
+            <div className="start-button-container">
+              <button className="start-button" onClick={onClick}>
+                ゲームを開始する
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

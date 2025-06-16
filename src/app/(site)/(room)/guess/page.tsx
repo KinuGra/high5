@@ -4,13 +4,15 @@ import { useAppDispatch, useAppSelector } from "@/stores";
 import { FC, useEffect, useState } from "react";
 import GuessForm from "./components/guess-form";
 import { Container } from "@chakra-ui/react";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import GuessResult from "./components/guess-result";
 import { resetAnswers } from "@/reducers/answer-reducer";
 import { resetGuessTurn } from "@/reducers/guess-increment-reducer";
+import { setRoomCondition } from "@/reducers/room-reducer";
+import { RoomCondition } from "@/types/room-condition";
 
 const Guess: FC = () => {
-  const { userName, roomName, members, currentRound, maxRound } =
+  const { userName, roomName, members, currentRound, maxRound, roomCondition } =
     useAppSelector((state) => state.roomInfo);
   const { answers } = useAppSelector((state) => state.answers);
   const { guesses } = useAppSelector((state) => state.guesses);
@@ -23,8 +25,12 @@ const Guess: FC = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    if (roomCondition != RoomCondition.Progressing) {
+      redirect("/");
+    }
     if (currentGuessTurn < members.length - 1) return;
     if (currentRound > maxRound) {
+      dispatch(setRoomCondition(RoomCondition.End));
       router.push("/result");
     } else {
       console.log("to question");
@@ -83,6 +89,7 @@ const Guess: FC = () => {
 
   return (
     <>
+      {currentRound}/{maxRound}
       {!showResult && answers.length > 0 && (
         <Container>
           <GuessForm

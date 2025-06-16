@@ -1,7 +1,7 @@
 "use client";
 
 import { MouseEventHandler, useEffect, useRef } from "react";
-import "./styles.css";
+import "./guess-result.css";
 import { GuessData } from "@/app/api/guess/route";
 import { GetIcon } from "@/components/icons";
 
@@ -113,58 +113,60 @@ export default function GuessResult({
   }, [answerUserName, userAnswer]);
 
   return (
-    <div className="container">
-      <div className="result-card">
-        <div className="user-result">
-          <h2 className="username-label">{answerUserName}さんの結果</h2>
-        </div>
+    <div className="page-container">
+      <div className="container">
+        <div className="result-card">
+          <div className="user-result">
+            <h2 className="username-label">{answerUserName}さんの結果</h2>
+          </div>
 
-        <div className="question-header">
-          <div className="question-icon">Q</div>
-          <h2 className="question-title">{question}</h2>
-        </div>
-        <div className="guesses-section">
-          <h3 className="section-title">みんなの推測</h3>
-          <div className="guesses-list" key={animationKey}>
-            {guesses.map((guess, index) => (
-              <div
-                key={index}
-                className="guess-item"
-                style={{
-                  animationDelay: `${index * 0.15}s`, // 各アイテムに遅延を追加
-                }}
-              >
-                <div className="guess-content">
-                  <div className="guess-text">{guess.guess}</div>
-                  <div className="guess-author">
-                    <div className="guess-author-by">by</div>
-                    <div className="guess-author-icon">
-                      {GetIcon(guess?.userIcon, { width: 24 })}
+          <div className="question-header">
+            <div className="question-icon">Q</div>
+            <h2 className="question-title">{question}</h2>
+          </div>
+          <div className="guesses-section">
+            <h3 className="section-title">みんなの推測</h3>
+            <div className="guesses-list" key={animationKey}>
+              {guesses.map((guess, index) => (
+                <div
+                  key={index}
+                  className="guess-item"
+                  style={{
+                    animationDelay: `${index * 0.15}s`, // 各アイテムに遅延を追加
+                  }}
+                >
+                  <div className="guess-content">
+                    <div className="guess-text">{guess.guess}</div>
+                    <div className="guess-author">
+                      <div className="guess-author-by">by</div>
+                      <div className="guess-author-icon">
+                        {GetIcon(guess?.userIcon, { width: 24 })}
+                      </div>
+                      <div>{guess.userName}さん</div>
                     </div>
-                    <div>{guess.userName}さん</div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
 
-        <div className="answer-section">
-          <h3 className="section-title">{answerUserName}さんの回答</h3>
-          <div className="answer" ref={answerRef}>
-            {userAnswer}
+          <div className="answer-section">
+            <h3 className="section-title">{answerUserName}さんの回答</h3>
+            <div className="answer" ref={answerRef}>
+              {userAnswer}
+            </div>
           </div>
-        </div>
 
-        {enableNextButton && (
-          <button
-            className="next-button"
-            disabled={isLoading}
-            onClick={handleClick}
-          >
-            次へ
-          </button>
-        )}
+          {enableNextButton && (
+            <button
+              className="next-button"
+              disabled={isLoading}
+              onClick={handleClick}
+            >
+              次へ
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

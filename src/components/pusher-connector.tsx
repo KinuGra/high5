@@ -6,7 +6,9 @@ import {
   addMembers,
   incrementRound,
   removeMembers,
+  setMaxRound,
   setRoomCondition,
+  setRoomInfo,
 } from "@/reducers/room-reducer";
 import { pusherClient } from "@/libs/pusher/client";
 import { Members } from "pusher-js";
@@ -44,7 +46,8 @@ export function PusherConnector() {
       `private-${roomName}`
     );
 
-    privateChannel.bind("evt::start", () => {
+    privateChannel.bind("evt::start", (maxRound: number) => {
+      dispatch(setMaxRound(maxRound));
       resetGuesses();
       dispatch(incrementRound());
       dispatch(setRoomCondition(RoomCondition.Progressing));

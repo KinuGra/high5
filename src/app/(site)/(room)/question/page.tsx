@@ -1,13 +1,14 @@
 "use client";
 import { useAppSelector } from "@/stores";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { FC, Suspense, useEffect, useState } from "react";
 import QuestionAnswerForm from "./components/question-answer-form";
 import { Rings } from "react-loader-spinner";
 import { Container, Box, Center, Text } from "@chakra-ui/react";
+import { RoomCondition } from "@/types/room-condition";
 
 const Question: FC = () => {
-  const { members, currentRound, maxRound } = useAppSelector(
+  const { members, currentRound, maxRound, roomCondition } = useAppSelector(
     (state) => state.roomInfo
   );
   const { answers } = useAppSelector((state) => state.answers);
@@ -35,6 +36,9 @@ const Question: FC = () => {
   // }, []);
 
   useEffect(() => {
+    if (roomCondition != RoomCondition.Progressing) {
+      redirect("/");
+    }
     if (answers.length >= members.length) {
       console.log("to guess");
       router.push("/guess");
@@ -43,6 +47,7 @@ const Question: FC = () => {
 
   return (
     <Suspense fallback={<p>...loading</p>}>
+      {currentRound}/{maxRound}
       {!isWaiting && (
         <QuestionAnswerForm
           setIsWaiting={setIsWaiting}
