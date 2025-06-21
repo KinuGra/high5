@@ -7,9 +7,98 @@ import "./styles.css";
 const Top: FC = () => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isJoinDialogOpen, setIsJoinDialogOpen] = useState(false);
+  const [isShowQr, setIsShowQr] = useState(false);
 
   return (
     <div className="app-container">
+      {/* QRコード表示ボタン（右上固定） */}
+      <button
+        className="qr-button"
+        style={{ position: "absolute", top: 20, right: 20, zIndex: 100 }}
+        onClick={() => setIsShowQr(true)}
+        aria-label="QRコードを表示"
+      >
+        {/* QRコードアイコン */}
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+          <rect x="3" y="3" width="6" height="6" rx="1.5" fill="#333" />
+          <rect x="3" y="15" width="6" height="6" rx="1.5" fill="#333" />
+          <rect x="15" y="3" width="6" height="6" rx="1.5" fill="#333" />
+          <rect x="10" y="10" width="4" height="4" rx="1" fill="#333" />
+          <rect x="15" y="15" width="2" height="2" rx="0.5" fill="#333" />
+          <rect x="19" y="19" width="2" height="2" rx="0.5" fill="#333" />
+        </svg>
+      </button>
+      {/* QRコードダイアログ */}
+      {isShowQr && (
+        <div
+          className="qr-dialog-overlay"
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            background: "rgba(0,0,0,0.3)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 200,
+          }}
+          onClick={() => setIsShowQr(false)}
+        >
+          <div
+            className="qr-dialog-content"
+            style={{
+              background: "#fff",
+              padding: 32,
+              borderRadius: 12,
+              minWidth: 280,
+              minHeight: 180,
+              position: "relative",
+              boxShadow: "0 2px 16px rgba(0,0,0,0.15)",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className="qr-close-button"
+              style={{
+                position: "absolute",
+                top: 8,
+                right: 8,
+                background: "none",
+                border: "none",
+                fontSize: 20,
+                cursor: "pointer",
+              }}
+              onClick={() => setIsShowQr(false)}
+            >
+              ✕
+            </button>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                marginTop: 24,
+              }}
+            >
+              {/* ここにQRコード画像や内容を挿入 */}
+              <img
+                src="/qr.png"
+                alt="QRコード"
+                style={{
+                  width: 120,
+                  height: 120,
+                  display: "block",
+                  margin: "0 auto",
+                }}
+              />
+              <div style={{ marginTop: 8 }}>QRコードをスキャンしてください</div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* IceBreakerロゴ */}
       <div className="icebreaker-logo-bg">
         <div className="icebreaker-logo">
