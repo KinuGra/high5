@@ -2,6 +2,12 @@
 
 みんなで楽しむアイスブレイク、推測ゲーム
 
+![](./public/top.png)
+
+![](./public/question.png)
+
+![](./public/guess.png)
+
 ---
 
 ## 概要
