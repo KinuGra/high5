@@ -1,21 +1,26 @@
-import { GuessData } from "@/app/api/guess/route";
+import { GuessData, GuessPostData } from "@/app/api/guess/route";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 export interface IGuessState {
-  guesses: GuessData[];
+  guesses: { [key: number]: GuessData[] };
 }
 
 const initialState: IGuessState = {
-  guesses: [],
+  guesses: {},
 };
 
 const guessSlice = createSlice({
   name: "guesses",
   initialState,
   reducers: {
-    addGuess: (state, action: PayloadAction<GuessData>) => {
-      state.guesses = [...state.guesses, action.payload];
-      state.guesses.sort();
+    addGuess: (state, action: PayloadAction<GuessPostData>) => {
+      state.guesses[action.payload.currentGuessTurn] = [
+        ...(state.guesses[action.payload.currentGuessTurn] ?? []),
+        action.payload.guessData,
+      ];
+      state.guesses[action.payload.currentGuessTurn].sort((a, b) =>
+        a.userName > b.userName ? 1 : -1
+      );
     },
     resetGuesses: (state) => {
       state.guesses = [];

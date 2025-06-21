@@ -2,30 +2,35 @@
 
 import { useAppDispatch, useAppSelector } from "@/stores";
 import { useEffect } from "react";
-import { useCookieStore } from "./cookie/useCookieValue";
 import {
   addMembers,
+  incrementRound,
   removeMembers,
+  setMaxRound,
   setRoomCondition,
+  setRoomInfo,
 } from "@/reducers/room-reducer";
 import { pusherClient } from "@/libs/pusher/client";
 import { Members } from "pusher-js";
 import { AnswerData } from "@/app/api/answer/route";
-import { addAnswer } from "@/reducers/answer-reducer";
-import { addGuess, resetGuesses } from "@/reducers/guess-reducer";
-import { GuessData } from "@/app/api/guess/route";
+import { addAnswer, resetAnswers } from "@/reducers/answer-reducer";
+import { addGuess, IGuessState, resetGuesses } from "@/reducers/guess-reducer";
+import { GuessData, GuessPostData } from "@/app/api/guess/route";
 import { RoomCondition } from "@/types/room-condition";
 import { GuessIncrementData } from "@/app/api/guess/increment/route";
-import { incrementGuess } from "@/reducers/guess-increment-reducer";
+import {
+  incrementGuessTurn,
+  resetGuessTurn,
+} from "@/reducers/guess-increment-reducer";
+import { calcScore } from "@/reducers/score-reducer";
 
 export function PusherConnector() {
   const dispatch = useAppDispatch();
-  const { roomName } = useAppSelector((state) => state.roomInfo);
-  const userNameCookie = useCookieStore("userName");
+  const { userName, userIcon, roomName } = useAppSelector(
+    (state) => state.roomInfo
+  );
 
   useEffect(() => {
-    const userName = userNameCookie.getValue();
-
     if (!!!roomName) {
       console.error("roomNameが存在しません。");
       return;
@@ -37,11 +42,14 @@ export function PusherConnector() {
     }
     console.log(`cookie userName: ${userName}`);
 
-    const privateChannel = pusherClient(userName).subscribe(
+    const privateChannel = pusherClient(userName, userIcon).subscribe(
       `private-${roomName}`
     );
 
-    privateChannel.bind("evt::start", () => {
+    privateChannel.bind("evt::start", (maxRound: number) => {
+      dispatch(setMaxRound(maxRound));
+      resetGuesses();
+      dispatch(incrementRound());
       dispatch(setRoomCondition(RoomCondition.Progressing));
     });
 
@@ -49,19 +57,24 @@ export function PusherConnector() {
       dispatch(addAnswer(answer));
     });
 
-    privateChannel.bind("evt::guessed", (guess: GuessData) => {
+    privateChannel.bind("evt::guessed", (guess: GuessPostData) => {
       dispatch(addGuess(guess));
     });
 
     privateChannel.bind(
       "evt::guessIncrement",
       (guessIncrement: GuessIncrementData) => {
-        dispatch(incrementGuess(guessIncrement));
-        dispatch(resetGuesses());
+        dispatch(incrementGuessTurn(guessIncrement));
       }
     );
 
-    const presenceChannel = pusherClient(userName).subscribe(
+    privateChannel.bind("evt::roundEnd", (guesses: IGuessState) => {
+      dispatch(incrementRound());
+      dispatch(calcScore(guesses));
+      dispatch(resetGuesses());
+    });
+
+    const presenceChannel = pusherClient(userName, userIcon).subscribe(
       `presence-${roomName}`
     );
 
@@ -69,17 +82,29 @@ export function PusherConnector() {
       "pusher:subscription_succeeded",
       (members: Members) => {
         members.each((member: any) => {
-          dispatch(addMembers(member.info.name));
+          dispatch(
+            addMembers({
+              userName: member.info.name,
+              userIcon: member.info.icon,
+            })
+          );
         });
       }
     );
     presenceChannel.bind("pusher:member_added", (member: any) => {
       console.log("メンバー追加！");
-      dispatch(addMembers(member.info.name));
+      dispatch(
+        addMembers({ userName: member.info.name, userIcon: member.info.icon })
+      );
     });
     presenceChannel.bind("pusher:member_removed", (member: any) => {
       console.log("メンバー削除！");
-      dispatch(removeMembers(member.info.name));
+      dispatch(
+        removeMembers({
+          userName: member.info.name,
+          userIcon: member.info.icon,
+        })
+      );
     });
 
     return () => {

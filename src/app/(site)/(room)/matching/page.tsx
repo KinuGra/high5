@@ -3,9 +3,10 @@ import { type FC, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { RoomCondition } from "@/types/room-condition";
 import { useAppSelector } from "@/stores";
+import { GetIcon } from "@/components/icons";
 
 const Matching: FC = () => {
-  const { roomName, roomCondition, members } = useAppSelector(
+  const { roomName, roomCondition, members, maxRound } = useAppSelector(
     (state) => state.roomInfo
   );
   const router = useRouter();
@@ -18,7 +19,7 @@ const Matching: FC = () => {
 
   const onClick = async () => {
     try {
-      const body = { roomName: roomName };
+      const body = { roomName: roomName, maxRound: maxRound };
       const res = await fetch("/api/room/start", {
         method: "POST",
         headers: {
@@ -431,6 +432,14 @@ const Matching: FC = () => {
           overflow-y: auto;
         }
 
+        .member-slot {
+          display: flex;
+        }
+
+        .member-icon {
+          align-content: center;
+        }
+
         .member-item {
           background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
           color: #1f2937;
@@ -442,6 +451,7 @@ const Matching: FC = () => {
           transition: all 0.3s ease;
           position: relative;
           overflow: hidden;
+          width: 80%;
         }
 
         .member-item::before {
@@ -641,19 +651,24 @@ const Matching: FC = () => {
             <h2 className="members-title">参加メンバー</h2>
             <div className="members-grid">
               {members.map((member, index) => (
-                <div key={index} className="member-item">
-                  {member}
+                <div key={index} className="member-slot">
+                  <div className="member-icon">
+                    {GetIcon(member.userIcon, {})}
+                  </div>
+                  <div className="member-item">{member.userName}</div>
                 </div>
               ))}
             </div>
           </div>
 
           {/* スタートボタン */}
-          <div className="start-button-container">
-            <button className="start-button" onClick={onClick}>
-              ゲームを開始する
-            </button>
-          </div>
+          {maxRound && (
+            <div className="start-button-container">
+              <button className="start-button" onClick={onClick}>
+                ゲームを開始する
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

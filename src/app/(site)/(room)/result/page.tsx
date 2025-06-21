@@ -1,19 +1,16 @@
-"use client"
-import type React from "react"
-import type { FC } from "react"
-import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
-
-const players = [
-  { name: "mi", score: 5 },
-  { name: "taro", score: 8 },
-  { name: "yoshida", score: 100 },
-]
+"use client";
+import type React from "react";
+import type { FC } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAppSelector } from "@/stores";
+import { GuessData } from "@/app/api/guess/route";
 
 const styles: { [key: string]: React.CSSProperties } = {
   bgOuter: {
     minHeight: "100vh",
-    background: "linear-gradient(135deg, #f3e8ff 0%, #fce7f3 25%, #fff1f2 50%, #fef3c7 75%, #f0f9ff 100%)",
+    background:
+      "linear-gradient(135deg, #f3e8ff 0%, #fce7f3 25%, #fff1f2 50%, #fef3c7 75%, #f0f9ff 100%)",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -57,7 +54,8 @@ const styles: { [key: string]: React.CSSProperties } = {
   cardOuter: {
     background: "rgba(255,255,255,0.95)",
     borderRadius: 32,
-    boxShadow: "0 20px 60px 0 rgba(236,72,153,0.15), 0 0 0 1px rgba(255,255,255,0.8)",
+    boxShadow:
+      "0 20px 60px 0 rgba(236,72,153,0.15), 0 0 0 1px rgba(255,255,255,0.8)",
     padding: 40,
     maxWidth: 480,
     width: "100%",
@@ -76,7 +74,8 @@ const styles: { [key: string]: React.CSSProperties } = {
     fontSize: "1.8rem",
     fontWeight: 800,
     color: "#fff",
-    background: "linear-gradient(135deg, #ec4899 0%, #f97316 50%, #eab308 100%)",
+    background:
+      "linear-gradient(135deg, #ec4899 0%, #f97316 50%, #eab308 100%)",
     borderRadius: 20,
     padding: "12px 24px",
     textAlign: "center",
@@ -91,7 +90,8 @@ const styles: { [key: string]: React.CSSProperties } = {
     left: "-50%",
     width: "200%",
     height: "200%",
-    background: "linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.2) 50%, transparent 70%)",
+    background:
+      "linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.2) 50%, transparent 70%)",
     animation: "shimmer 2s infinite",
   },
   subtitle: {
@@ -145,7 +145,8 @@ const styles: { [key: string]: React.CSSProperties } = {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    background: "linear-gradient(135deg, #fce7f3 0%, #fef3c7 50%, #e0f2fe 100%)",
+    background:
+      "linear-gradient(135deg, #fce7f3 0%, #fef3c7 50%, #e0f2fe 100%)",
     borderRadius: 18,
     padding: "16px 20px",
     marginBottom: 12,
@@ -254,17 +255,19 @@ const styles: { [key: string]: React.CSSProperties } = {
     whiteSpace: "nowrap",
     maxWidth: "180px",
   },
-}
+};
 
 const Result: FC = () => {
-  const maxScore = Math.max(...players.map((p) => p.score))
-  const sortedPlayers = [...players].sort((a, b) => b.score - a.score)
-  const [showList, setShowList] = useState(false)
-  const router = useRouter()
+  const { scores } = useAppSelector((state) => state.score);
+  const players = scores;
+  const maxScore = Math.max(...players.map((p) => p.score));
+  const sortedPlayers = [...players].sort((a, b) => b.score - a.score);
+  const [showList, setShowList] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
-    setShowList(true)
-  }, [])
+    setShowList(true);
+  }, []);
 
   return (
     <div style={styles.bgOuter}>
@@ -300,7 +303,13 @@ const Result: FC = () => {
               >
                 <div style={styles.playerInfo}>
                   <span style={styles.rank}>
-                    {index === 0 ? "👑" : index === 1 ? "🥈" : index === 2 ? "🥉" : "🎯"}
+                    {index === 0
+                      ? "👑"
+                      : index === 1
+                      ? "🥈"
+                      : index === 2
+                      ? "🥉"
+                      : "🎯"}
                   </span>
                   <span style={styles.playerName}>{player.name}</span>
                 </div>
@@ -320,12 +329,18 @@ const Result: FC = () => {
           <div style={styles.summaryContent}>
             <div style={styles.summaryItem}>
               <span style={styles.summaryIcon}>📝</span>
-              <span style={styles.summaryText}>全{players.length}名が参加しました</span>
+              <span style={styles.summaryText}>
+                全{players.length}名が参加しました
+              </span>
             </div>
             <div style={styles.summaryItem}>
               <span style={styles.summaryIcon}>🎯</span>
               <span style={styles.summaryText}>
-                平均正解数: {Math.round(players.reduce((sum, p) => sum + p.score, 0) / players.length)}問
+                平均正解数:{" "}
+                {Math.round(
+                  players.reduce((sum, p) => sum + p.score, 0) / players.length
+                )}
+                問
               </span>
             </div>
             <div style={styles.summaryItem}>
@@ -339,15 +354,19 @@ const Result: FC = () => {
           <button
             style={styles.actionButtonSecondary}
             onClick={() => router.push("/")}
-            onMouseOver={e => {
+            onMouseOver={(e) => {
               e.currentTarget.style.transform = "scale(1.08)";
-              e.currentTarget.style.boxShadow = "0 12px 32px 0 rgba(99,102,241,0.28)";
-              e.currentTarget.style.background = "linear-gradient(135deg, #818cf8 0%, #a78bfa 100%)";
+              e.currentTarget.style.boxShadow =
+                "0 12px 32px 0 rgba(99,102,241,0.28)";
+              e.currentTarget.style.background =
+                "linear-gradient(135deg, #818cf8 0%, #a78bfa 100%)";
             }}
-            onMouseOut={e => {
+            onMouseOut={(e) => {
               e.currentTarget.style.transform = "scale(1)";
-              e.currentTarget.style.boxShadow = styles.actionButtonSecondary.boxShadow as string;
-              e.currentTarget.style.background = styles.actionButtonSecondary.background as string;
+              e.currentTarget.style.boxShadow = styles.actionButtonSecondary
+                .boxShadow as string;
+              e.currentTarget.style.background = styles.actionButtonSecondary
+                .background as string;
             }}
           >
             🏠 トップに戻る
@@ -355,15 +374,19 @@ const Result: FC = () => {
           <button
             style={styles.actionButton}
             onClick={() => router.refresh()}
-            onMouseOver={e => {
+            onMouseOver={(e) => {
               e.currentTarget.style.transform = "scale(1.08)";
-              e.currentTarget.style.boxShadow = "0 12px 32px 0 rgba(16,185,129,0.38)"; // シャドウも緑系に
-              e.currentTarget.style.background = "linear-gradient(135deg, #34d399 0%, #059669 100%)"; // ホバー時も緑系
+              e.currentTarget.style.boxShadow =
+                "0 12px 32px 0 rgba(16,185,129,0.38)"; // シャドウも緑系に
+              e.currentTarget.style.background =
+                "linear-gradient(135deg, #34d399 0%, #059669 100%)"; // ホバー時も緑系
             }}
-            onMouseOut={e => {
+            onMouseOut={(e) => {
               e.currentTarget.style.transform = "scale(1)";
-              e.currentTarget.style.boxShadow = styles.actionButton.boxShadow as string;
-              e.currentTarget.style.background = styles.actionButton.background as string;
+              e.currentTarget.style.boxShadow = styles.actionButton
+                .boxShadow as string;
+              e.currentTarget.style.background = styles.actionButton
+                .background as string;
             }}
           >
             🔄 もう一度遊ぶ
@@ -390,7 +413,7 @@ const Result: FC = () => {
         }
       `}</style>
     </div>
-  )
-}
+  );
+};
 
-export default Result
+export default Result;

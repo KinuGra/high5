@@ -10,11 +10,13 @@ export async function POST(req: Request) {
   const channelName = body.get("channel_name") as string;
   const user_id = body.get("userId") as string;
   const name = body.get("username") as string;
+  const icon = body.get("usericon") as string;
 
   const user = {
     user_id: socketId,
     user_info: {
       name: name,
+      icon: icon,
     },
   };
 

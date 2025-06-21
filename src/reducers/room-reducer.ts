@@ -1,40 +1,68 @@
 import { RoomCondition } from "@/types/room-condition";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
+export type MemberInfo = {
+  userName: string;
+  userIcon: string;
+};
+
 export interface IRoomState {
+  userName: string;
+  userIcon: string;
   roomName: string;
   roomCondition: RoomCondition;
-  members: string[];
+  members: MemberInfo[];
+  currentRound: number;
+  maxRound: number;
 }
 
 const initialState: IRoomState = {
+  userName: "",
+  userIcon: "",
   roomName: "",
   roomCondition: RoomCondition.Matching,
   members: [],
+  currentRound: 0,
+  maxRound: 3,
 };
 
 const roomSlice = createSlice({
   name: "roomInfo",
   initialState,
   reducers: {
-    setRoomName: (state, action: PayloadAction<string>) => {
-      state.roomName = action.payload;
+    setRoomInfo: (state, action: PayloadAction<IRoomState>) => {
+      state.userName = action.payload.userName;
+      state.userIcon = action.payload.userIcon;
+      state.roomName = action.payload.roomName;
+      state.maxRound = action.payload.maxRound;
+    },
+    setMaxRound: (state, action: PayloadAction<number>) => {
+      state.maxRound = action.payload;
     },
     setRoomCondition: (state, action: PayloadAction<RoomCondition>) => {
       state.roomCondition = action.payload;
     },
-    addMembers: (state, action: PayloadAction<string>) => {
+    addMembers: (state, action: PayloadAction<MemberInfo>) => {
       state.members = [...state.members, action.payload];
-      state.members.sort();
+      state.members.sort((a, b) => (a.userName > b.userName ? 1 : -1));
     },
-    removeMembers: (state, action: PayloadAction<string>) => {
+    removeMembers: (state, action: PayloadAction<MemberInfo>) => {
       state.members = state.members.filter(
         (_, i) => i !== state.members.indexOf(action.payload)
       );
     },
+    incrementRound: (state) => {
+      state.currentRound++;
+    },
   },
 });
 
-export const { setRoomName, setRoomCondition, addMembers, removeMembers } =
-  roomSlice.actions;
+export const {
+  setRoomInfo,
+  setMaxRound,
+  setRoomCondition,
+  addMembers,
+  removeMembers,
+  incrementRound,
+} = roomSlice.actions;
 export const roomReducer = roomSlice.reducer;

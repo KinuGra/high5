@@ -1,11 +1,11 @@
-import { useCookieStore } from "@/components/cookie/useCookieValue";
-import { setRoomName } from "@/reducers/room-reducer";
-import { useAppDispatch } from "@/stores";
+import { setRoomInfo } from "@/reducers/room-reducer";
+import { useAppDispatch, useAppSelector } from "@/stores";
 import { Button, Field, Input, Stack } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { FC } from "react";
 import { Controller, useForm } from "react-hook-form";
 import IconSelector from "./icon-selector";
+import { RoomCondition } from "@/types/room-condition";
 
 interface FormValues {
   userName: string;
@@ -16,7 +16,7 @@ interface FormValues {
 const RoomJoinForm: FC = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const userNameCookie = useCookieStore("userName");
+  const { userName } = useAppSelector((state) => state.roomInfo);
 
   const {
     control,
@@ -25,7 +25,7 @@ const RoomJoinForm: FC = () => {
     formState: { isSubmitting, isSubmitSuccessful, errors },
   } = useForm<FormValues>({
     defaultValues: {
-      userName: userNameCookie.getValue(),
+      userName: userName,
     },
   });
 
@@ -43,8 +43,15 @@ const RoomJoinForm: FC = () => {
     if (res.status === 200) {
       const { occupied } = await res.json();
       if (occupied) {
-        userNameCookie.setValue(data.userName);
-        dispatch(setRoomName(data.roomName));
+        const roomInfo = {
+          userName: data.userName,
+          userIcon: data.userIcon,
+          roomName: data.roomName,
+          roomCondition: RoomCondition.Matching,
+          members: [],
+        };
+
+        dispatch(setRoomInfo(roomInfo));
 
         router.push("/matching");
       }

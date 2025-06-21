@@ -1,6 +1,5 @@
 import { FC, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { useCookieStore } from "@/components/cookie/useCookieValue";
 import { useAppSelector } from "@/stores";
 import "./guess-form.css";
 
@@ -8,7 +7,9 @@ export interface GuessFormProps {
   answerUserName: string;
   question: string;
   choices: string[];
+  answer: string;
   showResult: boolean;
+  currentGuessTurn: number;
 }
 
 interface FormValues {
@@ -19,11 +20,14 @@ const GuessForm: FC<GuessFormProps> = ({
   answerUserName,
   question,
   choices,
-  showResult
+  answer,
+  showResult,
+  currentGuessTurn,
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { roomName } = useAppSelector((state) => state.roomInfo);
-  const userNameCookie = useCookieStore("userName");
+  const { userName, userIcon, roomName } = useAppSelector(
+    (state) => state.roomInfo
+  );
 
   const {
     control,
@@ -31,17 +35,19 @@ const GuessForm: FC<GuessFormProps> = ({
     formState: { errors },
   } = useForm<FormValues>();
 
-  useEffect(()=>{
-    if(showResult) setIsLoading(true);
-  }, [showResult])
+  useEffect(() => {
+    if (showResult) setIsLoading(true);
+  }, [showResult]);
 
   const onSubmit = handleSubmit(async (formData) => {
     setIsLoading(true);
-    const userName = userNameCookie.getValue();
 
     const otherInfo = {
+      currentGuessTurn: currentGuessTurn,
       roomName: roomName,
       userName: userName,
+      userIcon: userIcon,
+      isCorrect: formData.guess === answer,
     };
 
     const data = { ...otherInfo, ...formData };
@@ -108,7 +114,11 @@ const GuessForm: FC<GuessFormProps> = ({
               <div className="error-text">{errors.guess?.message}</div>
             )}
 
-            <button type="submit" disabled={isLoading} className="submit-button">
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="submit-button"
+            >
               推測する
             </button>
           </fieldset>
