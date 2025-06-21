@@ -15,7 +15,7 @@ const Header: FC = () => {
         >
           <NextLink href="/">
             <Heading as="h1" fontSize="2xl" cursor="pointer">
-              TOP
+              High5
             </Heading>
           </NextLink>
 
