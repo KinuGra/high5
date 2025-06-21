@@ -49,6 +49,8 @@ const RoomJoinForm: FC = () => {
           roomName: data.roomName,
           roomCondition: RoomCondition.Matching,
           members: [],
+          currentRound: 1, // 初期値を追加
+          maxRound: 5,      // 初期値を追加
         };
 
         dispatch(setRoomInfo(roomInfo));
