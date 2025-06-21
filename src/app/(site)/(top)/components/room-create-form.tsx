@@ -95,11 +95,11 @@ const RoomCreateForm: FC = () => {
           <Controller
             name="maxRound"
             control={control}
-            defaultValue={["3"]}
+            defaultValue={["2"]}
             render={({ field }) => (
               <Select.Root
                 name={field.name}
-                defaultValue={["3"]}
+                defaultValue={["2"]}
                 onValueChange={({ value }) => field.onChange(value)}
                 onInteractOutside={() => field.onBlur()}
                 collection={maxRoundOptions}
