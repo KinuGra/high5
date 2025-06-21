@@ -1,36 +1,92 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# High5
 
-## Getting Started
+みんなで楽しむアイスブレイク推測ゲーム
 
-First, run the development server:
+---
 
+## 概要
+High5は、複数人で参加できる「お題推測」型のアイスブレイクWebゲームです。ルームを作成し、友達や初対面の人と一緒に、出題された質問に対する回答を推測し合いながら盛り上がることができます。
+
+## 主な機能
+- ルーム作成・参加（最大8人）
+- ニックネーム・アイコン選択
+- ランダムなお題（質問）出題
+- 各自が質問に回答
+- 他のメンバーの回答を推測
+- 正解数によるスコア集計・ランキング表示
+- Pusherによるリアルタイム同期
+- 美しいアニメーション・レスポンシブUI
+
+## ゲームの流れ
+1. **ルーム作成/参加**
+   - トップページから「ルーム作成」または「ルーム参加」を選択。
+   - ルーム作成時は自動生成される「あいことば（ルームコード）」を共有。
+   - 参加者はニックネーム・アイコンを選び、あいことばで入室。
+2. **マッチング画面**
+   - 参加者が揃ったら「ゲーム開始」ボタンでスタート。
+3. **質問フェーズ**
+   - 各ラウンドごとに1人ずつ順番で「お題（質問）」が出題され、その人が選択肢から回答。
+   - 他のメンバーは待機。
+4. **推測フェーズ**
+   - 回答者以外の全員が「この人ならどれを選ぶ？」を推測して選択。
+5. **結果発表**
+   - 推測が終わると、正解者・みんなの選択・正解数がアニメーション付きで表示。
+6. **ラウンド進行**
+   - 全員が1回ずつ回答者を担当したらゲーム終了。
+7. **最終結果**
+   - 全ラウンドの正解数を集計し、ランキング・平均正解数などを表示。
+
+## 技術スタック
+- **Next.js** 15 (App Router)
+- **React** 19
+- **TypeScript**
+- **Redux Toolkit**（状態管理）
+- **Pusher**（リアルタイム通信）
+- **Chakra UI**（UIコンポーネント）
+- **Tailwind CSS**（デザイン）
+- **react-hook-form**（フォーム管理）
+- **その他**: emotion, react-icons, framer-motion など
+
+## ディレクトリ構成（一部）
+- `src/app/(site)/(top)/` ... トップページ・ルーム作成/参加UI
+- `src/app/(site)/(room)/matching/` ... ルーム内マッチング・メンバー表示
+- `src/app/(site)/(room)/question/` ... 質問・回答フェーズ
+- `src/app/(site)/(room)/guess/` ... 推測フェーズ
+- `src/app/(site)/(room)/result/` ... 結果発表
+- `src/app/api/` ... Next.js APIルート（Pusher連携・ゲーム進行）
+- `src/reducers/` ... Reduxスライス
+- `src/stores/` ... Reduxストア
+- `src/libs/pusher/` ... Pusherクライアント/サーバー設定
+
+## 主要API仕様（抜粋）
+- `POST /api/room/start` ... ルーム開始
+- `POST /api/answer` ... 回答送信
+- `POST /api/guess` ... 推測送信
+- `POST /api/room/round-end` ... ラウンド終了
+- `GET  /api/question` ... お題取得
+
+## Redux構成
+- `roomInfo` ... ルーム情報・状態
+- `answers` ... 各ラウンドの回答
+- `guesses` ... 各ラウンドの推測
+- `score` ... スコア集計
+
+## 仕様・ルール詳細
+- 1ルーム最大8人、1ゲーム最大5ラウンド
+- お題はランダムに出題（APIで取得）
+- 回答・推測は選択肢式
+- 正解数でランキング
+- Pusherで全員の画面がリアルタイム同期
+- UIはChakra UI＋Tailwind CSSで美しく
+- スマホ・PC両対応
+
+## 開発・起動方法
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## ライセンス
+MIT
