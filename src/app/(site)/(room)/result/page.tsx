@@ -354,7 +354,7 @@ const Result: FC = () => {
           <button
             style={styles.actionButtonSecondary}
             onClick={() => {
-              window.location.href = "/";
+              window.location.replace("/");
             }}
             onMouseOver={(e) => {
               e.currentTarget.style.transform = "scale(1.08)";
