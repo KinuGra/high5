@@ -3,7 +3,7 @@ export type QuestionData = {
   choices: string[];
 };
 
-export async function GET(req: Request, res: Response) {
+export async function GET(req: Request) {
   // 抽選処理
   const questionIndex = Math.floor(Math.random() * questions.length);
   return Response.json(questions[questionIndex], { status: 200 });
