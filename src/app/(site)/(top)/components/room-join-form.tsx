@@ -1,6 +1,6 @@
 import { setRoomInfo } from "@/reducers/room-reducer";
 import { useAppDispatch, useAppSelector } from "@/stores";
-import { Button, Field, Input, Stack } from "@chakra-ui/react";
+import { Button, Field, Input, Stack, Text } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { FC } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -66,6 +66,9 @@ const RoomJoinForm: FC = () => {
         <Field.Root invalid={!!errors.userName} required>
           <Field.Label>ニックネーム</Field.Label>
           <Input {...register("userName")} />
+          <Text color={"red"} textStyle={"sm"}>
+            *ルーム内のニックネームは重複させないでください
+          </Text>
           <Field.ErrorText>{errors.userName?.message}</Field.ErrorText>
         </Field.Root>
 
