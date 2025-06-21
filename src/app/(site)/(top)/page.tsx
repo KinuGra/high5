@@ -4,6 +4,8 @@ import RoomCreateForm from "./components/room-create-form";
 import RoomJoinForm from "./components/room-join-form";
 import "./styles.css";
 
+/* ここがルートのpage.tsx */
+
 const Top: FC = () => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isJoinDialogOpen, setIsJoinDialogOpen] = useState(false);
@@ -215,7 +217,7 @@ const Top: FC = () => {
               </svg>
             </div>
             <h4 className="feature-title">新しい出会い</h4>
-            <p className="feature-description">自然な会話で素敵なつながりを</p>
+            <p className="feature-description">懇親会やハッカソンで使ってみてね</p>
           </div>
 
           <div className="feature">
@@ -225,7 +227,7 @@ const Top: FC = () => {
               </svg>
             </div>
             <h4 className="feature-title">簡単操作</h4>
-            <p className="feature-description">誰でも簡単に始められる</p>
+            <p className="feature-description">右上のボタンからサイトへのQRコードを表示して楽に共有しよう</p>
           </div>
         </div>
       </div>
