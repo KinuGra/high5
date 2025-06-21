@@ -353,7 +353,9 @@ const Result: FC = () => {
         <div style={styles.actionButtonGroup}>
           <button
             style={styles.actionButtonSecondary}
-            onClick={() => router.push("/")}
+            onClick={() => {
+              window.location.href = "/";
+            }}
             onMouseOver={(e) => {
               e.currentTarget.style.transform = "scale(1.08)";
               e.currentTarget.style.boxShadow =
@@ -370,26 +372,6 @@ const Result: FC = () => {
             }}
           >
             🏠 トップに戻る
-          </button>
-          <button
-            style={styles.actionButton}
-            onClick={() => router.refresh()}
-            onMouseOver={(e) => {
-              e.currentTarget.style.transform = "scale(1.08)";
-              e.currentTarget.style.boxShadow =
-                "0 12px 32px 0 rgba(16,185,129,0.38)"; // シャドウも緑系に
-              e.currentTarget.style.background =
-                "linear-gradient(135deg, #34d399 0%, #059669 100%)"; // ホバー時も緑系
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.transform = "scale(1)";
-              e.currentTarget.style.boxShadow = styles.actionButton
-                .boxShadow as string;
-              e.currentTarget.style.background = styles.actionButton
-                .background as string;
-            }}
-          >
-            🔄 もう一度遊ぶ
           </button>
         </div>
       </div>
