@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useAppSelector } from "@/stores";
 import "./guess-form.css";
@@ -10,6 +10,7 @@ export interface GuessFormProps {
   answer: string;
   showResult: boolean;
   currentGuessTurn: number;
+  setIsWaiting: Dispatch<SetStateAction<boolean>>;
 }
 
 interface FormValues {
@@ -23,6 +24,7 @@ const GuessForm: FC<GuessFormProps> = ({
   answer,
   showResult,
   currentGuessTurn,
+  setIsWaiting,
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { userName, userIcon, roomName } = useAppSelector(
@@ -40,6 +42,7 @@ const GuessForm: FC<GuessFormProps> = ({
   }, [showResult]);
 
   const onSubmit = handleSubmit(async (formData) => {
+    setIsWaiting(true);
     setIsLoading(true);
 
     const otherInfo = {

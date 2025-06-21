@@ -3,13 +3,14 @@
 import { useAppDispatch, useAppSelector } from "@/stores";
 import { FC, useEffect, useState } from "react";
 import GuessForm from "./components/guess-form";
-import { Container } from "@chakra-ui/react";
+import { Box, Center, Container, Text } from "@chakra-ui/react";
 import { redirect, useRouter } from "next/navigation";
 import GuessResult from "./components/guess-result";
 import { resetAnswers } from "@/reducers/answer-reducer";
 import { resetGuessTurn } from "@/reducers/guess-increment-reducer";
 import { setRoomCondition } from "@/reducers/room-reducer";
 import { RoomCondition } from "@/types/room-condition";
+import { Rings } from "react-loader-spinner";
 
 const Guess: FC = () => {
   const { userName, roomName, members, currentRound, maxRound, roomCondition } =
@@ -22,6 +23,7 @@ const Guess: FC = () => {
   const router = useRouter();
   const [animationKey, setAnimationKey] = useState<number>(0); // アニメーションをリセットするためのキー
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isWaiting, setIsWaiting] = useState<boolean>(false);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -52,6 +54,7 @@ const Guess: FC = () => {
   }, [guesses]);
 
   useEffect(() => {
+    setIsWaiting(false);
     setIsLoading(false);
     setEnableNextButton(false);
     if (answers.length > 0 && answers[currentGuessTurn].userName === userName) {
@@ -90,7 +93,7 @@ const Guess: FC = () => {
   return (
     <>
       {currentRound}/{maxRound}
-      {!showResult && answers.length > 0 && (
+      {!showResult && answers.length > 0 && !isWaiting && (
         <Container>
           <GuessForm
             answerUserName={answers[currentGuessTurn].userName}
@@ -99,7 +102,18 @@ const Guess: FC = () => {
             answer={answers[currentGuessTurn].answer}
             showResult={showResult}
             currentGuessTurn={currentGuessTurn}
+            setIsWaiting={setIsWaiting}
           />
+        </Container>
+      )}
+      {!showResult && answers.length > 0 && isWaiting && (
+        <Container>
+          <Box h="100vh">
+            <Center h="100%">
+              <Rings />
+              <Text>皆の推測待ち</Text>
+            </Center>
+          </Box>
         </Container>
       )}
       {showResult && answers.length > 0 && (
