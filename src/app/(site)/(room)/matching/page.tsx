@@ -434,10 +434,18 @@ const Matching: FC = () => {
 
         .member-slot {
           display: flex;
+          align-items: center;
+          gap: 5px;
         }
 
         .member-icon {
-          align-content: center;
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
 
         .member-item {
