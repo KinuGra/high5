@@ -625,7 +625,6 @@ const Matching: FC = () => {
 
       {/* メインコンテンツ */}
       <div className="main-content">
-
         {/* ロゴセクション */}
         <div className="logo-section">
           <div className="logo-container">
@@ -661,7 +660,7 @@ const Matching: FC = () => {
           </div>
 
           {/* スタートボタン */}
-          {maxRound && (
+          {maxRound !== 0 && (
             <div className="start-button-container">
               <button className="start-button" onClick={onClick}>
                 ゲームを開始する
