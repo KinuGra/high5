@@ -660,7 +660,7 @@ const Matching: FC = () => {
           </div>
 
           {/* スタートボタン */}
-          {maxRound !== 0 && (
+          {members.length > 1 && maxRound !== 0 && (
             <div className="start-button-container">
               <button className="start-button" onClick={onClick}>
                 ゲームを開始する
